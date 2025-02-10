@@ -31,7 +31,7 @@ export const LatencyMonitor = ({
     return (
       <HoverCard>
         <HoverCardTrigger>
-          <div className="flex items-center gap-1 cursor-help ">
+          <div className="flex items-center gap-1 cursor-help h-full">
             <InfoIcon className="size-3 text-muted-foreground" />
             <span className="font-medium">{type}:</span>
             {formatNumber(avg)}ms
@@ -80,7 +80,7 @@ export const LatencyMonitor = ({
   };
 
   return (
-    <div className="p-2 border-b text-xs bg-muted/50 flex gap-0.5 flex-col overflow-x-auto touch-pan-x font-mono">
+    <div className="p-2 border-b text-xs shrink-0 bg-muted flex gap-0.5 flex-col overflow-x-auto touch-pan-x font-mono">
       <div className="text-xs text-muted-foreground">
         {/* explain that this is latency monitor displayed in average format in ms */}
         Average latency in milliseconds

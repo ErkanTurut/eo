@@ -2,6 +2,7 @@
 import { LoadingIcon } from "@/components/icons";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { TextShimmer } from "./ui/text-shimmer";
 
 const loadingMessages = {
   gmail_search_engine: [
@@ -72,7 +73,7 @@ export const Loading = ({ tool }: { tool?: string }) => {
           <div className="animate-spin text-muted-foreground">
             <LoadingIcon />
           </div>
-          <div className="text-muted-foreground text-sm">{message}</div>
+          <TextShimmer className="text-sm">{message}</TextShimmer>
         </div>
       </motion.div>
     </AnimatePresence>

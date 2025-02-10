@@ -212,7 +212,7 @@ export function Chat() {
             className="flex-grow bg-background shadow-none focus-visible:ring-0 rounded-sm  max-h-24 "
           />
           <Tooltip>
-            <TooltipContent className="bg-muted border text-foreground rounded-sm">
+            <TooltipContent className="bg-background border text-foreground rounded-sm">
               <p>Send your message</p>
             </TooltipContent>
             <TooltipTrigger asChild>
@@ -228,7 +228,7 @@ export function Chat() {
           </Tooltip>
           {isAuthenticated && (
             <Tooltip>
-              <TooltipContent className="bg-muted border text-foreground rounded-sm">
+              <TooltipContent className="bg-background border text-foreground rounded-sm">
                 {vad.listening
                   ? "Stop listening"
                   : "Start listening for voice input"}
