@@ -75,7 +75,7 @@ export function Chat() {
         toast.error("Speech recognition failed.");
       }
     },
-    positiveSpeechThreshold: 0.6,
+    positiveSpeechThreshold: 0.8,
     minSpeechFrames: 4,
   });
 
@@ -153,7 +153,8 @@ export function Chat() {
   return (
     <TooltipProvider>
       <div className="md:border h-full w-full flex flex-col rounded-none overflow-hidden bg-background">
-        {isAuthenticated && <LatencyMonitor metrics={latencyMetrics} />}
+        {isAuthenticated ||
+          (true && <LatencyMonitor metrics={latencyMetrics} />)}
         <div className="overflow-hidden flex-grow">
           <ScrollArea
             ref={messagesContainerRef}

@@ -40,6 +40,8 @@ export async function POST(req: Request) {
   You have access to the user's email and name, so personalize your responses where appropriate.
   **User email:** ${session?.user?.email}
   **User name:**${session?.user?.name}
+  **User location:** ${await location()}
+  **Current time:** ${await time()}
 
   ### **Your Capabilities:**
   1. **Smart Email Search**
@@ -141,7 +143,6 @@ export async function POST(req: Request) {
 const gmail_search_engine = async (query: string, messages: Message[]) => {
   try {
     const model = openai("gpt-4o-mini");
-    const currentTime = new Date().toLocaleString();
 
     if (!query) {
       throw new Error("Query string is missing.");
@@ -150,7 +151,9 @@ const gmail_search_engine = async (query: string, messages: Message[]) => {
     const query_prompt = `
 	  You are an AI expert in constructing highly accurate Gmail search queries. Your task is to generate three variations of a Gmail search query based on the user's request and then merge them into one comprehensive query that maximizes relevant email results. Your output must contain only the final query without any extra text or commentary.
 
-  current time: ${currentTime}
+  **User location:** ${await location()}
+  **Current time:** ${await time()}
+
   ### Guidelines:
   #### 1. Extract Core Keywords
   Identify the essential subjects and entities in the user query.
@@ -208,7 +211,9 @@ const gmail_search_engine = async (query: string, messages: Message[]) => {
 	   const question_prompt =
   You are an AI assistant specializing in enhancing semantic search queries for vector-based retrieval systems. Your task is to generate three distinct query variants from the user's input that improve recall and accuracy for embedding-based searches. Each variant should be diverse, meaningful, and tailored to a different strategy:
 
-  current time: ${currentTime}
+  **User location:** ${await location()}
+  **Current time:** ${await time()}
+
   1. **Reworded Expansion:** Rephrase the original query while preserving its meaning.
   2. **Contextual Broadening:** Introduce relevant synonyms, related terms, and alternative phrasings.
   3. **Detail Emphasis:** Focus on high-signal keywords and crucial details to strengthen search relevance.
@@ -371,3 +376,22 @@ const gmail_search_engine = async (query: string, messages: Message[]) => {
     return { error: "An unexpected error occurred." };
   }
 };
+
+async function location() {
+  const headersList = await headers();
+
+  const country = headersList.get("x-vercel-ip-country");
+  const region = headersList.get("x-vercel-ip-country-region");
+  const city = headersList.get("x-vercel-ip-city");
+
+  if (!country || !region || !city) return "unknown";
+
+  return `${city}, ${region}, ${country}`;
+}
+
+async function time() {
+  const headersList = await headers();
+  return new Date().toLocaleString("en-US", {
+    timeZone: headersList.get("x-vercel-ip-timezone") || undefined,
+  });
+}
