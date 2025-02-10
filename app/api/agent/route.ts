@@ -301,6 +301,7 @@ const gmail_search_engine = async (query: string, messages: Message[]) => {
     const token = await getToken({
       req: { headers: headersList },
       secret: process.env.AUTH_SECRET ?? "",
+      secureCookie: true,
     }).catch((error) => {
       console.error("Error fetching authentication token:", error);
       throw new Error("Authentication token retrieval failed.");
