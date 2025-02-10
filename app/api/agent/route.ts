@@ -85,7 +85,7 @@ export async function POST(req: Request) {
     throw new Error("Authentication token retrieval failed.");
   });
 
-  console.log({ token, headersList, session });
+  console.log({ token, session });
 
   if (!token?.access_token || !token?.refresh_token) {
     throw new Error("Invalid authentication tokens.");
