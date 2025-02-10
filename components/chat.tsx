@@ -14,6 +14,14 @@ import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { LatencyMonitor } from "./latency-monitor";
 import { Loading } from "./loading";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 export function Chat() {
   const { data: session } = useSession();
   const isAuthenticated = !!session?.user;
@@ -143,89 +151,110 @@ export function Chat() {
   }, [toolCall, messages]);
 
   return (
-    <div className="md:border h-full w-full flex flex-col rounded-none overflow-hidden bg-background">
-      {isAuthenticated && <LatencyMonitor metrics={latencyMetrics} />}
-      <div className="overflow-hidden flex-grow">
-        <ScrollArea
-          ref={messagesContainerRef}
-          className="flex-1 h-full py-0 px-2"
-        >
-          <div className="flex flex-col gap-2">
-            {messages.map((message) =>
-              message.parts.map((part, index) => {
-                if (part.type === "text") {
-                  return (
-                    <PreviewMessage
-                      key={`${message.id}-text-${index}`}
-                      role={message.role}
-                      content={part.text}
-                    />
-                  );
-                }
-                if (part.type === "tool-invocation") {
-                  return (
-                    <PreviewMessage
-                      key={`${message.id}-tool-${index}`}
-                      role={message.role}
-                      toolInvocations={[part.toolInvocation]}
-                    />
-                  );
-                }
-                return null;
-              })
-            )}
-            {currentToolCall && isLoading && (
-              <div className="px-2 min-h-12">
-                <Loading tool={currentToolCall} />
-              </div>
-            )}
-          </div>
-          <div
-            ref={messagesEndRef}
-            className="flex-shrink-0 min-w-[24px] min-h-[24px]"
-          />
-        </ScrollArea>
-      </div>
-      <form
-        onSubmit={handleSubmit}
-        className="flex p-2 bg-muted border-t gap-2 w-full"
-      >
-        <Textarea
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit(e as any);
-            }
-          }}
-          placeholder="Type your message..."
-          className="flex-grow bg-background shadow-none focus-visible:ring-0 rounded-sm  max-h-24 "
-        />
-        <Button
-          type="submit"
-          size="icon"
-          variant="ghost"
-          className="hover:shadow-inner transition-all duration-200 shrink-0"
-        >
-          <Send className="h-4 w-4 text-muted-foreground " />
-        </Button>
-        {isAuthenticated && (
-          <Button
-            type="button"
-            size="icon"
-            variant={vad.listening ? "default" : "ghost"}
-            onClick={vad.toggle}
-            className="shrink-0 hover:shadow-inner transition-all duration-200  "
+    <TooltipProvider>
+      <div className="md:border h-full w-full flex flex-col rounded-none overflow-hidden bg-background">
+        {isAuthenticated && <LatencyMonitor metrics={latencyMetrics} />}
+        <div className="overflow-hidden flex-grow">
+          <ScrollArea
+            ref={messagesContainerRef}
+            className="flex-1 h-full py-0 px-2"
           >
-            {vad.listening ? (
-              <Mic className="h-4 w-4 text-muted-foreground" />
-            ) : (
-              <MicOff className="h-4 w-4 text-muted-foreground" />
-            )}
-          </Button>
-        )}
-      </form>
-    </div>
+            <div className="flex flex-col gap-2">
+              {messages.map((message) =>
+                message.parts.map((part, index) => {
+                  if (part.type === "text") {
+                    return (
+                      <PreviewMessage
+                        key={`${message.id}-text-${index}`}
+                        role={message.role}
+                        content={part.text}
+                      />
+                    );
+                  }
+                  if (part.type === "tool-invocation") {
+                    return (
+                      <PreviewMessage
+                        key={`${message.id}-tool-${index}`}
+                        role={message.role}
+                        toolInvocations={[part.toolInvocation]}
+                      />
+                    );
+                  }
+                  return null;
+                })
+              )}
+              {currentToolCall && isLoading && (
+                <div className="px-2 min-h-12">
+                  <Loading tool={currentToolCall} />
+                </div>
+              )}
+            </div>
+            <div
+              ref={messagesEndRef}
+              className="flex-shrink-0 min-w-[24px] min-h-[24px]"
+            />
+          </ScrollArea>
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          className="flex p-2 bg-muted border-t gap-2 w-full"
+        >
+          <Textarea
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e as any);
+              }
+            }}
+            placeholder="Type your message..."
+            className="flex-grow bg-background shadow-none focus-visible:ring-0 rounded-sm  max-h-24 "
+          />
+          <Tooltip>
+            <TooltipContent className="bg-muted border text-foreground rounded-sm">
+              <p>Send your message</p>
+            </TooltipContent>
+            <TooltipTrigger asChild>
+              <Button
+                type="submit"
+                size="icon"
+                variant="ghost"
+                className="hover:shadow-inner transition-all  shrink-0 duration-500 ease-in"
+              >
+                <Send className="h-4 w-4 text-muted-foreground " />
+              </Button>
+            </TooltipTrigger>
+          </Tooltip>
+          {isAuthenticated && (
+            <Tooltip>
+              <TooltipContent className="bg-muted border text-foreground rounded-sm">
+                {vad.listening
+                  ? "Stop listening"
+                  : "Start listening for voice input"}
+              </TooltipContent>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant={"ghost"}
+                  onClick={vad.toggle}
+                  className={cn(
+                    "shrink-0 hover:shadow-inner border border-transparent transition-all duration-500 ease-in",
+                    vad.listening && "shadow-inner border-zinc-500"
+                  )}
+                >
+                  {vad.listening ? (
+                    <Mic className="h-4 w-4" />
+                  ) : (
+                    <MicOff className="h-4 w-4 text-muted-foreground " />
+                  )}
+                </Button>
+              </TooltipTrigger>
+            </Tooltip>
+          )}
+        </form>
+      </div>
+    </TooltipProvider>
   );
 }
