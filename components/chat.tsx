@@ -153,8 +153,7 @@ export function Chat() {
   return (
     <TooltipProvider>
       <div className="md:border h-full w-full flex flex-col rounded-none overflow-hidden bg-background">
-        {isAuthenticated ||
-          (true && <LatencyMonitor metrics={latencyMetrics} />)}
+        {isAuthenticated && <LatencyMonitor metrics={latencyMetrics} />}
         <div className="overflow-hidden flex-grow">
           <ScrollArea
             ref={messagesContainerRef}
