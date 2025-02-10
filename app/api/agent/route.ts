@@ -80,6 +80,7 @@ export async function POST(req: Request) {
   const token = await getToken({
     req: { headers: headersList },
     secret: process.env.AUTH_SECRET ?? "",
+    secureCookie: true,
   }).catch((error) => {
     console.error("Error fetching authentication token:", error);
     throw new Error("Authentication token retrieval failed.");
