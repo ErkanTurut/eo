@@ -4,9 +4,8 @@ This project is an AI-powered Gmail agent that enables advanced email management
 
 ## Tech Stack
 
-- **Frontend:** [Next.js](https://nextjs.org/)
-- **AI Models:** [OpenAI GPT-4O](https://openai.com/) and [GPT-4O-Mini](https://openai.com/)
-- **Backend:** [Python](https://www.python.org/) with [LlamaIndex](https://github.com/jerryjliu/llama_index)
+- **Frontend & Backend:** [Next.js](https://nextjs.org/)
+- **AI Models:** [OpenAI GPT-4O](https://openai.com/) and [GPT-4O-Mini](https://openai.com/) with [LlamaIndex](https://github.com/jerryjliu/llama_index)
 - **Authentication:** [Auth.js](https://authjs.dev/)
 - **Gmail Integration:** Gmail OpenAPI SDK
 - **Text-to-Speech (TTS) and Speech-to-Text (STT):** [Groq](https://groq.com/) + [Cartesia](https://cartesia.ai/)
